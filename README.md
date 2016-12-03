@@ -74,6 +74,8 @@ Resizing the filesystem on /dev/mmcblk0p2 to 7799536 (4k) blocks.
 The filesystem on /dev/mmcblk0p2 is now 7799536 blocks long.
 ```
 
+The installation of minibian on the SD card is now complete. Insert it into the Raspberry Pi, attach it to a cable LAN in your network and to a power outlet to boot it.
+
 
 ### 2) Setup SSH to the Raspberry Pi
 
