@@ -96,8 +96,10 @@ scp vpn-archive.tar.gz root@minibian:
 Login to the Raspberry Pi, then download and execute the installation script:
 
 ```
-ssh root@minibian
-wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/setup.sh
+$ ssh root@minibian
+$ wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/setup.sh
+$ chmod 700 setup.sh
+$ ./setup.sh
 ```
 
 
