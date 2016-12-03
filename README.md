@@ -105,11 +105,10 @@ $ ./setup.sh
 
 ### 4) Setup your router for the Raspberry Pi
 
+The Raspberry Pi should be connected to a network where it can not reach any other members of the local network - it should have a subnet to itself. Shorewall rules setup during the installation routine further prevent this.
+
 Common routers like AVM Fritz Box:  
-The Raspberry Pi should be connected to a network where it can not reach the other computers. Most common routers, like
-RVM Fritz Box'es, provide the option to assign one lan network port to a "guest network", which cant reach the other
-networks. Thats what you want to set up, however make sure that nobody else (no house guests) use that network. Also
-check if the guest wlan provided by your Fritz Box or router allows interactions to and from the guest LAN network.
+Most common routers, like RVM Fritz Box'es, provide the option to assign one lan network port to a "guest network", which cant reach the other networks. Thats what you want to set up, however make sure that nobody else (no house guests) use that network. Also check if the guest wlan provided by your Fritz Box or router allows interactions to and from the guest LAN network.
 
 More expensive routers:  
 If you can setup a prover VLAN, thats even better. 
