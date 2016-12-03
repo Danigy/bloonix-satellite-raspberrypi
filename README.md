@@ -93,12 +93,21 @@ scp vpn-archive.tar.gz root@minibian:
 
 ### 3) Install docker and the Bloonix Satellite service on the Raspberry Pi
 
-Login to the Raspberry Pi, then download and execute the installation script:
-
+Login to the Raspberry Pi, then download the installation script:
 ```
 $ ssh root@minibian
 $ wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/setup.sh
 $ chmod 700 setup.sh
+```
+
+Some variables have to be set in the script for the installation to work properly. You can install the `nano` editor first if you are not familiar with `vi`:
+```
+$ apt-get update; apt-get -y install nano
+$ nano setup.sh
+```
+
+When the variables are set, start the installation. This might take around ten minutes, depending on your internet speed and class of SD card.
+```
 $ ./setup.sh
 ```
 
