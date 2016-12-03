@@ -24,13 +24,17 @@ Go to [sourceforge.net/projects/minibian](https://sourceforge.net/projects/minib
 unpack the archive.  Write the minibian image to the SD card:
 ```
 # Replace with filename of latest image
-sudo dd if=2016-03-12-jessie-minibian.img | pv | dd of=/dev/mmcblk0
-sudo sync
-sudo partprobe
+$ sudo dd if=2016-03-12-jessie-minibian.img | pv | dd of=/dev/mmcblk0
+1626112+0 records in
+1626112+0 records out
+832569344 bytes (833 MB) copied, 107.735 s, 7.7 MB/s
+
+$ sudo sync
+$ sudo partprobe
 ```
 
 These commands will resize the root partition on the SD card to the maximum available space
-```
+```bash
 # Set this to your SD card device
 SD_CARD_DEVICE_FILE='/dev/mmcblk0'
 start_sector=$(sudo fdisk -l ${SD_CARD_DEVICE_FILE} | grep ${SD_CARD_DEVICE_FILE}p2 |  awk '{ print $2 }')
@@ -38,6 +42,36 @@ echo -e "d\n2\nn\np\n2\n${start_sector}\n\nw" | sudo fdisk ${SD_CARD_DEVICE_FILE
 sudo sync
 sudo e2fsck -f ${SD_CARD_DEVICE_FILE}p2
 sudo resize2fs ${SD_CARD_DEVICE_FILE}p2
+```
+
+Expected output:
+```
+$ SD_CARD_DEVICE_FILE='/dev/mmcblk0'
+$ start_sector=$(sudo fdisk -l ${SD_CARD_DEVICE_FILE} | grep ${SD_CARD_DEVICE_FILE}p2 |  awk '{ print $2 }')
+$ echo -e "d\n2\nn\np\n2\n${start_sector}\n\nw" | sudo fdisk ${SD_CARD_DEVICE_FILE}
+Command (m for help): Partition number (1-4): 
+Command (m for help): Partition type:
+   p   primary (1 primary, 0 extended, 3 free)
+   e   extended
+Select (default p): Partition number (1-4, default 2): First sector (125056-62521343, default 125056): Last sector, +sectors or +size{K,M,G} (125056-62521343, default 62521343): Using default value 62521343
+Command (m for help): The partition table has been altered!
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+$ sudo sync
+$ sudo e2fsck -f ${SD_CARD_DEVICE_FILE}p2
+e2fsck 1.42.9 (4-Feb-2014)
+Pass 1: Checking inodes, blocks, and sizes
+Pass 2: Checking directory structure
+Pass 3: Checking directory connectivity
+Pass 4: Checking reference counts
+Pass 5: Checking group summary information
+/dev/mmcblk0p2: 15631/46944 files (0.2% non-contiguous), 120088/187512 blocks
+
+$ sudo resize2fs ${SD_CARD_DEVICE_FILE}p2
+resize2fs 1.42.9 (4-Feb-2014)
+Resizing the filesystem on /dev/mmcblk0p2 to 7799536 (4k) blocks.
+The filesystem on /dev/mmcblk0p2 is now 7799536 blocks long.
 ```
 
 
