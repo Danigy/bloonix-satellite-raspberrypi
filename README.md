@@ -23,7 +23,6 @@ Disk /dev/mmcblk0: 32.0 GB, 32010928128 bytes
 Go to [sourceforge.net/projects/minibian](https://sourceforge.net/projects/minibian/), download the latest minibian image and
 unpack the archive.  Write the minibian image to the SD card:
 ```
-
 # Replace with filename of latest image
 sudo dd if=2016-03-12-jessie-minibian.img | pv | dd of=/dev/mmcblk0
 sudo sync
