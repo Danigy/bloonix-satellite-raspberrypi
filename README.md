@@ -10,26 +10,27 @@ Go to [sourceforge.net/projects/minibian](https://sourceforge.net/projects/minib
 unpack the archive. Insert the Micro SD Card into your Laptop and use the following command to determine the name of the new device:
 
 ```
-dmesg -T
+$ dmesg -T
 [...]
 [timestamp] mmc0: new ultra high speed SDR104 SDHC card at address 0001
 [timestamp] mmcblk0: mmc0:0001 00000 29.8 GiB 
 [timestamp] mmcblk0: p1 p2
 
-sudo fdisk -l /dev/mmcblk0
+$ sudo fdisk -l /dev/mmcblk0
 Disk /dev/mmcblk0: 32.0 GB, 32010928128 bytes
 [...]
 ```
 
-Now flash the minibian image to the SD card:
+Flash the minibian image to the SD card:
 ```
-sudo dd if=2016-03-12-jessie-minibian.img | pv | dd of=$SD_CARD_DEVICE_FILE
+sudo dd if=*minibian.img | pv | dd of=/dev/mmcblk0
 sudo sync
 sudo partprobe
 ```
 
 These commands will resize the root partition on the SD card to the maximum available space
 ```
+# Set this to your SD card device
 SD_CARD_DEVICE_FILE='/dev/mmcblk0'
 start_sector=$(sudo fdisk -l ${SD_CARD_DEVICE_FILE} | grep ${SD_CARD_DEVICE_FILE}p2 |  awk '{ print $2 }')
 echo -e "d\n2\nn\np\n2\n${start_sector}\n\nw" | sudo fdisk ${SD_CARD_DEVICE_FILE}
