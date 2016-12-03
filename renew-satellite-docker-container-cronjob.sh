@@ -6,7 +6,7 @@
 
 #set -x
 
-SATELLITE_AUTHKEY='secret_longer_than_32_characters_bloonix_satellite_authkey'
+SATELLITE_AUTHKEY='@@@SATELLITE_AUTH_KEY@@@'
 
 
 # Remove all images not assigned to any containers (if any containers are actually running, or it will remove all images)
@@ -50,3 +50,5 @@ else
     docker rm BloonixSatelliteOLD
 fi
 
+
+exit 0

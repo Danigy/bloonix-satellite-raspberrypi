@@ -13,7 +13,8 @@ VPN_SERVER_IP='123.123.123.123'
 VPN_SERVER_PORT='1194'
 VPN_SERVER_INTERNAL_IP='10.10.0.1'
 
-
+# Set your local timezone
+TIME_ZONE='Europe/Berlin'
 
 
 ### MAIN ###
@@ -26,10 +27,18 @@ echo '## Secure the root account - disable passwords for it'
 passwd -l -d root
 
 
+echo '## Set timezone'
+
+export DEBCONF_NONINTERACTIVE_SEEN=true DEBIAN_FRONTEND=noninteractive
+echo $TIME_ZONE > /etc/timezone
+dpkg-reconfigure tzdata
+
+
 echo '## Createing a 2 GB swapfile - this takes around three minutes using a Samsung EVO 32GB Class 10 SD card'
 
 test -f /var/opt/swapfile.img || dd if=/dev/zero bs=1M count=2048 of=/var/opt/swapfile.img
 chmod 0600 /var/opt/swapfile.img
+sync
 mkswap /var/opt/swapfile.img
 grep swap /etc/fstab || echo '/var/opt/swapfile.img none swap sw 0 0' >> /etc/fstab
 swapon -a
@@ -68,9 +77,17 @@ host_part=$origin
 
 echo '## Setting up a cronjob to renew the bloonix satellite docker image and container'
 
-# At 00:00 on sundays (try to avoid the time of the default force-reconnect on most routers)
+# Download the docker container and image renewal script
 wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/renew-satellite-docker-container-cronjob.sh -O /usr/local/sbin/renew-satellite-docker-container.sh
-grep 'renew-satellite-docker-container' /var/spool/cron/crontabs/root || crontab -l | { cat; echo "0 0 * * 0 /usr/local/sbin/renew-satellite-docker-container.sh"; } | crontab -
+sed -i 's/@@@SATELLITE_AUTH_KEY@@@/${SATELLITE_AUTHKEY}/g' /usr/local/sbin/renew-satellite-docker-container.sh TODO
+chmod 700 /usr/local/sbin/renew-satellite-docker-container.sh
+# Run the cronjobs at 00:00 on sundays (try to avoid the time of the default force-reconnect on most routers)
+# Renew the renewal script weekly
+grep '' /var/spool/cron/crontabs/root || \
+    crontab -l | { cat; echo "0 0 * * 0 wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/renew-satellite-docker-container-cronjob.sh -O /usr/local/sbin/renew-satellite-docker-container.sh"; } | crontab -
+# Run the renewal script weekly
+grep 'renew-satellite-docker-container' /var/spool/cron/crontabs/root || \
+    crontab -l | { cat; echo "5 0 * * 0 /usr/local/sbin/renew-satellite-docker-container.sh"; } | crontab -
 
 
 echo '## Blacklisting the drivers for wlan and bluetooth'
@@ -87,14 +104,9 @@ modprobe -r -v hci_uart
 
 echo '## Setting up shorewall'
 
-# Enable startup on boot
-echo -e 'INITLOG=/dev/null\nOPTIONS=""\nRESTARTOPTIONS=""\nSAFESTOP=0\nSTARTOPTIONS=""\nstartup=1' >> /etc/default/shorewall
-
 # /etc/shorewall/interfaces
-'echo ?FORMAT 2
-
+echo '?FORMAT 2
 red eth0        tcpflags,logmartians,nosmurfs
-red wlan0       tcpflags,logmartians,nosmurfs
 sat tun0        tcpflags' > /etc/shorewall/interfaces
 
 # /etc/shorewall/policy
@@ -109,7 +121,6 @@ echo '?SECTION ALL
 ?SECTION INVALID
 ?SECTION UNTRACKED
 ?SECTION NEW
-
 SSH(ACCEPT)     red     $FW
 ACCEPT          all     $FW     tcp     5464
 DNS(ACCEPT)     $FW     all
@@ -119,6 +130,14 @@ DROP            $FW     red:10.0.0.0/8,172.16.0.0/12,192.168.0.0/16' > /etc/shor
 echo 'fw      firewall
 red
 sat' > /etc/shorewall/zones
+
+# Enable startup on boot
+echo -e 'INITLOG=/dev/null
+OPTIONS=""
+RESTARTOPTIONS=""
+SAFESTOP=0
+STARTOPTIONS=""
+startup=1' > /etc/default/shorewall
 
 
 echo '## Enabling openvpn'
@@ -147,6 +166,10 @@ WantedBy=default.target' > /etc/systemd/system/docker-bloonix-satellite.service
 
 # Reload systemd
 systemctl daemon-reload
+
+
+echo '## Start the container for the first time'
+/usr/local/sbin/renew-satellite-docker-container.sh
 
 
 
