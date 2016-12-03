@@ -26,9 +26,9 @@ echo '## Secure the root account - disable passwords for it'
 passwd -l -d root
 
 
-echo '## Createing a 4 GB swapfile, this takes around 3 minutes'
+echo '## Createing a 2 GB swapfile - this takes around three minutes using a Samsung EVO 32GB Class 10 SD card'
 
-test -f /var/opt/swapfile.img || dd if=/dev/zero bs=1M count=4096 of=/var/opt/swapfile.img
+test -f /var/opt/swapfile.img || dd if=/dev/zero bs=1M count=2048 of=/var/opt/swapfile.img
 chmod 0600 /var/opt/swapfile.img
 mkswap /var/opt/swapfile.img
 grep swap /etc/fstab || echo '/var/opt/swapfile.img none swap sw 0 0' >> /etc/fstab
