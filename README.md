@@ -1,93 +1,83 @@
-### Create the minibian image on your laptop ###
-
-# Set device to use as sd card for the rapsi
-sd_card_device=/dev/mmcblk0
-
-# Minibian is used as image: https://sourceforge.net/projects/minibian/
-wget https://sourceforge.net/projects/minibian/TODO
-
-# Flash to micro SD Card
-dd if=2016-03-12-jessie-minibian.img | pv | dd of=$sd_card_device
-
-# Resize the root partition to maximum available space
-start_sector=$(sudo fdisk -l ${sd_card_device} | grep ${sd_card_device}p2 |  awk '{ print $2 }')
-echo -e "d\n2\nn\np\n2\n${start_sector}\n\nw" | fdisk ${sd_card_device}
-sync
-e2fsck -f ${sd_card_device}/p2
-resize2fs ${sd_card_device}/p2
+## Bloonix Satellite Installation Instructions for Raspberry Pi 3 Model B
 
 
+This manual explains how to install Bloonix Satellite with Docker on the Raspberry Pi Model B.
 
 
-### Setup Script ###
+### 1) Install minibian to a micro SD Card
 
-## Login and lock root account
-ssh-copy-id root@minibian  # pw raspberry
+Go to [sourceforge.net/projects/minibian](https://sourceforge.net/projects/minibian/), download the latest minibian image and
+unpack the archive. Insert the Micro SD Card into your Laptop and use the following command to determine the name of the new device:
+
+```
+dmesg -T
+[...]
+[timestamp] mmc0: new ultra high speed SDR104 SDHC card at address 0001
+[timestamp] mmcblk0: mmc0:0001 00000 29.8 GiB 
+[timestamp] mmcblk0: p1 p2
+
+sudo fdisk -l /dev/mmcblk0
+Disk /dev/mmcblk0: 32.0 GB, 32010928128 bytes
+[...]
+```
+
+Now flash the minibian image to the SD card:
+```
+sudo dd if=2016-03-12-jessie-minibian.img | pv | dd of=$SD_CARD_DEVICE_FILE
+sudo sync
+sudo partprobe
+```
+
+These commands will resize the root partition on the SD card to the maximum available space
+```
+SD_CARD_DEVICE_FILE='/dev/mmcblk0'
+start_sector=$(sudo fdisk -l ${SD_CARD_DEVICE_FILE} | grep ${SD_CARD_DEVICE_FILE}p2 |  awk '{ print $2 }')
+echo -e "d\n2\nn\np\n2\n${start_sector}\n\nw" | sudo fdisk ${SD_CARD_DEVICE_FILE}
+sudo sync
+sudo e2fsck -f ${SD_CARD_DEVICE_FILE}p2
+sudo resize2fs ${SD_CARD_DEVICE_FILE}p2
+```
+
+
+### 2) Setup SSH to the Raspberry Pi
+
+Copy your SSH public key to the Raspberry Pi - the password is "raspberry" by default
+```
+ssh-copy-id root@minibian
+```
+
+Copy over any files required later
+```
+scp vpn-archive.tar.gz root@minibian:
+[...]
+```
+
+
+### 3) Install docker and the Bloonix Satellite service on the Raspberry Pi
+
+Login to the Raspberry Pi, then download and execute the installation script:
+
+```
 ssh root@minibian
-passwd -l -d root
-scp -v blunix-dsl-monitoring-vpn-AS3320.dsl.sat.pm.tar.gz root@minibian:
-# Install customer ssh keys now
+wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/setup.sh
+```
 
 
-## Packages
-# Enable required contrib sources for apt-transport-https
-echo -e 'deb http://mirrordirector.raspbian.org/raspbian jessie main firmware non-free\ndeb http://archive.raspberrypi.org/debian jessie main' > /etc/apt/sources.list
-# Get up to date
-apt-get update; apt-get -y upgrade; apt-get -y dist-upgrade
-# Install required packages
-apt-get -y install unattended-upgrades whois wget openvpn curl apt-transport-https raspbian-archive-keyring nano
-# Add docker repository, docker for ARM comes from http://blog.hypriot.com/downloads/
-# the following is extracted from: curl -s https://packagecloud.io/install/repositories/Hypriot/Schatzkiste/script.deb.sh | bash
-curl -L 'https://packagecloud.io/Hypriot/Schatzkiste/gpgkey' 2> /dev/null | apt-key add -
-echo 'deb https://packagecloud.io/Hypriot/Schatzkiste/raspbian/ jessie main' > /etc/apt/sources.list.d/Hypriot_Schatzkiste.list
-apt-get update; apt-get -y install docker-hypriot
+### 4) Setup your router for the Raspberry Pi
 
-## Set hostname
-current_public_ip="$(wget http://ipinfo.io/ip -qO -)"
-host_part="$(whois ${current_public_ip} | grep origin | awk '{print $2}')"
-full_host_name="${host_part}.sat.pm"
-hostname $full_host_name
-sed '/127.0.0.1/d' /etc/hosts
-echo "127.0.0.1 $full_host_name $host_part" >> /etc/hosts
-echo $full_host_name > /etc/hostname
+Common routers like AVM Fritz Box:  
+The Raspberry Pi should be connected to a network where it can not reach the other computers. Most common routers, like
+RVM Fritz Box'es, provide the option to assign one lan network port to a "guest network", which cant reach the other
+networks. Thats what you want to set up, however make sure that nobody else (no house guests) use that network. Also
+check if the guest wlan provided by your Fritz Box or router allows interactions to and from the guest LAN network.
 
-# other basics?
+More expensive routers:  
+If you can setup a prover VLAN, thats even better. 
 
 
-## Enable openvpn
-mv /root/*tar.gz /etc/openvpn/; cd /etc/openvpn/; tar xvzf *tar.gz
-service openvpn restart
+Note:  
+The setup script disables wlan and bluetooth and the Raspberry Pi by unloading and blacklisting the drivers.
+You are hence only access the device via SSH if you are in the same LAN network.
 
 
-
-## Disable wifi and bluetooth
-http://www.raspberrypi-spy.co.uk/2015/06/how-to-disable-wifi-power-saving-on-the-raspberry-pi/
-https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=138610
-
-
-2) Setup shorewall
-
-
-
-
-
-
-
-4) Start docker in ready only - the customer gets a unique satellite authkey
-
-
-5) Setup cronjob to renew docker image
-
-
-5) Setup VPN
-
-
-
-6) If installed by blunix:
-  - disable password auth
-
-
-
-7) Print statistics relevant for us (provider numbers and so on)
-
-
+After the Raspberry Pi is attached to a secure LAN port the installation is finished.

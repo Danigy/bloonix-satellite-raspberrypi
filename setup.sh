@@ -57,7 +57,8 @@ apt-get update; apt-get -y install docker-hypriot
 
 ## Setup cronjob to renew docker image
 # At 00:00 on sundays (try to avoid the time of the default force-reconnect on most routers)
-crontab -l | { cat; echo "0 0 * * 0 /usr/local/sbin/renew-bloonix-satellite-container.sh"; } | crontab -
+wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/renew-satellite-docker-container-cronjob.sh -O /usr/local/sbin/renew-satellite-docker-container.sh
+crontab -l | { cat; echo "0 0 * * 0 /usr/local/sbin/renew-satellite-docker-container.sh"; } | crontab -
 
 ## Blacklist the drivers for wlan and bluetooth
 # Wlan
