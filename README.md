@@ -33,9 +33,9 @@ $ sudo sync
 $ sudo partprobe
 ```
 
-These commands will resize the root partition on the SD card to the maximum available space
+These commands will resize the root partition on the SD card to the maximum available space. Copy paste them to the terminal on your Laptop - make sure to set the first variable according to your SD Cards device file name!
 ```bash
-# Set this to your SD card device
+# Set this to your SD card device!
 SD_CARD_DEVICE_FILE='/dev/mmcblk0'
 start_sector=$(sudo fdisk -l ${SD_CARD_DEVICE_FILE} | grep ${SD_CARD_DEVICE_FILE}p2 |  awk '{ print $2 }')
 echo -e "d\n2\nn\np\n2\n${start_sector}\n\nw" | sudo fdisk ${SD_CARD_DEVICE_FILE}
