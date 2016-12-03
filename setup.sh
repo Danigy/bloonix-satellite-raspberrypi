@@ -35,19 +35,6 @@ grep swap /etc/fstab || echo '/var/opt/swapfile.img none swap sw 0 0' >> /etc/fs
 swapon -a
 
 
-#echo '## Set hostname (its not really required to set the hostname..)'
-
-current_public_ip="$(wget http://ipinfo.io/ip -qO -)"
-#domain='example.sat.com'
-origin="$(whois ${current_public_ip} | grep origin | awk '{print $2}')"
-host_part=$origin
-#full_host_name="${host_part}.$domain"
-#hostname $full_host_name
-#sed '/127.0.0.1/d' /etc/hosts
-#echo "127.0.0.1 $full_host_name $host_part" >> /etc/hosts
-#echo $full_host_name > /etc/hostname
-
-
 echo '## Installing packages'
 
 # Enable required contrib sources for apt-transport-https
@@ -64,6 +51,19 @@ curl -L 'https://packagecloud.io/Hypriot/Schatzkiste/gpgkey' 2> /dev/null | apt-
 echo 'deb https://packagecloud.io/Hypriot/Schatzkiste/raspbian/ jessie main' > /etc/apt/sources.list.d/Hypriot_Schatzkiste.list
 apt-get update; apt-get -y install docker-hypriot
 # installation will fail, we have to reboot, then it works
+
+
+#echo '## Set hostname (its not really required to set the hostname..)'
+
+current_public_ip="$(wget http://ipinfo.io/ip -qO -)"
+#domain='example.sat.com'
+origin="$(whois ${current_public_ip} | grep origin | awk '{print $2}')"
+host_part=$origin
+#full_host_name="${host_part}.$domain"
+#hostname $full_host_name
+#sed '/127.0.0.1/d' /etc/hosts
+#echo "127.0.0.1 $full_host_name $host_part" >> /etc/hosts
+#echo $full_host_name > /etc/hostname
 
 
 echo '## Setting up a cronjob to renew the bloonix satellite docker image and container'
