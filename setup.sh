@@ -2,15 +2,8 @@
 #
 # Setup the running raspberrypi
 
-## Login and lock root account ##
-#
-# ssh-copy-id root@minibian  # pw raspberry
-# ssh root@minibian
-# scp *-vpn-AS*.example.com.tar.gz root@minibian:
-# Install any additional ssh keys on minibian
 
-
-## PLEASE CHANGE THOSE VARIABLES
+### PLEASE CHANGE THOSE VARIABLES ###
 
 # Enter the satellite authkey provided by Blunix GmbH
 SATELLITE_AUTHKEY='secret_longer_than_32_characters_bloonix_satellite_authkey'
@@ -23,16 +16,17 @@ VPN_SERVER_INTERNAL_IP='10.10.0.1'
 
 
 
-## MAIN
-set -x
+### MAIN ###
+
+#set -x
 
 
-## Secure the root account - disable passwords for it
+echo '## Secure the root account - disable passwords for it'
 
 passwd -l -d root
 
 
-## Create a 4 GB swapfile
+echo '## Createing a 4 GB swapfile, this takes around 3 minutes'
 
 test -f /var/opt/swapfile.img || dd if=/dev/zero bs=1M count=4096 of=/var/opt/swapfile.img
 chmod 0600 /var/opt/swapfile.img
@@ -41,7 +35,7 @@ grep swap /etc/fstab || echo '/var/opt/swapfile.img none swap sw 0 0' >> /etc/fs
 swapon -a
 
 
-## Set hostname (its not really required to set the hostname..)
+#echo '## Set hostname (its not really required to set the hostname..)'
 
 current_public_ip="$(wget http://ipinfo.io/ip -qO -)"
 #domain='example.sat.com'
@@ -54,7 +48,7 @@ host_part=$origin
 #echo $full_host_name > /etc/hostname
 
 
-## Packages
+echo '## Installing packages'
 
 # Enable required contrib sources for apt-transport-https
 echo -e 'deb http://mirrordirector.raspbian.org/raspbian jessie main firmware non-free\ndeb http://archive.raspberrypi.org/debian jessie main' > /etc/apt/sources.list
@@ -72,14 +66,14 @@ apt-get update; apt-get -y install docker-hypriot
 # installation will fail, we have to reboot, then it works
 
 
-## Cronjob to renew docker image
+echo '## Setting up a cronjob to renew the bloonix satellite docker image and container'
 
 # At 00:00 on sundays (try to avoid the time of the default force-reconnect on most routers)
 wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/renew-satellite-docker-container-cronjob.sh -O /usr/local/sbin/renew-satellite-docker-container.sh
 grep 'renew-satellite-docker-container' /var/spool/cron/crontabs/root || crontab -l | { cat; echo "0 0 * * 0 /usr/local/sbin/renew-satellite-docker-container.sh"; } | crontab -
 
 
-## Blacklist the drivers for wlan and bluetooth
+echo '## Blacklisting the drivers for wlan and bluetooth'
 
 # Wlan
 echo -e 'blacklist brcmfmac\nblacklist brcmutil' > /etc/modprobe.d/raspi-blacklist.conf
@@ -91,7 +85,7 @@ modprobe -r -v btbcm
 modprobe -r -v hci_uart
 
 
-## Setup shorewall
+echo '## Setting up shorewall'
 
 # Enable startup on boot
 echo -e 'INITLOG=/dev/null\nOPTIONS=""\nRESTARTOPTIONS=""\nSAFESTOP=0\nSTARTOPTIONS=""\nstartup=1' >> /etc/default/shorewall
@@ -127,7 +121,7 @@ red
 sat' > /etc/shorewall/zones
 
 
-## Enable openvpn
+echo '## Enabling openvpn'
 if ifconfig | grep tun; then
     mv -v /root/*tar.gz /etc/openvpn/
     cd /etc/openvpn/
@@ -135,7 +129,7 @@ if ifconfig | grep tun; then
 fi
 
 
-## Setup systemd to always spawn our Container on startup
+echo '## Setting up systemd to always spawn our Container on startup'
 
 # Create a systemd config file
 echo '[Unit]
@@ -155,8 +149,10 @@ WantedBy=default.target' > /etc/systemd/system/docker-bloonix-satellite.service
 systemctl daemon-reload
 
 
-## Print statistics relevant for us (provider numbers and so on)
 
+### END ###
+
+# Print statistics relevant for us (provider numbers and so on)
 echo -e "=============================================================================================================\n"
 echo -e "\nINSTALLATION COMPLETED\n\n\n"
 echo -e "Please send the following sensitive information to Blunix GmbH:\n"
@@ -164,9 +160,7 @@ echo -e "Origin: $origin\n\n"
 echo -e "This machine will reboot in 60 seconds to complete the installation. Press CRTL+C to abort.\n"
 echo -e "=============================================================================================================\n"
 
-
 # Sleep and while and then reboot for the kernel changes to take effect
-
 secs=60
 while [ $secs -gt 0 ]; do
    echo -ne "$secs\033[0K\r"
@@ -176,4 +170,5 @@ done
 shutdown -r now &
 
 
+# Exit gracefully
 exit 0
