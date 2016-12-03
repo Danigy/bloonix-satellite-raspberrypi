@@ -6,8 +6,7 @@ This manual explains how to install Bloonix Satellite with Docker on the Raspber
 
 ### 1) Install minibian to a micro SD Card
 
-Go to [sourceforge.net/projects/minibian](https://sourceforge.net/projects/minibian/), download the latest minibian image and
-unpack the archive. Insert the Micro SD Card into your Laptop and use the following command to determine the name of the new device:
+Insert the Micro SD Card into your Laptop and use the following command to determine the name of the new device:
 
 ```
 $ dmesg -T
@@ -21,9 +20,12 @@ Disk /dev/mmcblk0: 32.0 GB, 32010928128 bytes
 [...]
 ```
 
-Flash the minibian image to the SD card:
+Go to [sourceforge.net/projects/minibian](https://sourceforge.net/projects/minibian/), download the latest minibian image and
+unpack the archive.  Write the minibian image to the SD card:
 ```
-sudo dd if=*minibian.img | pv | dd of=/dev/mmcblk0
+
+# Replace with filename of latest image
+sudo dd if=2016-03-12-jessie-minibian.img | pv | dd of=/dev/mmcblk0
 sudo sync
 sudo partprobe
 ```
