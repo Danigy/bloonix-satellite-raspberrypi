@@ -79,7 +79,7 @@ tput setf 2; echo '## Setting up a cronjob to renew the bloonix satellite docker
 
 # Download the docker container and image renewal script
 wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/renew-satellite-docker-container-cronjob.sh -O /usr/local/sbin/renew-satellite-docker-container.sh
-sed -i 's/@@@SATELLITE_AUTH_KEY@@@/${SATELLITE_AUTHKEY}/g' /usr/local/sbin/renew-satellite-docker-container.sh TODO
+sed -i "s/@@@SATELLITE_AUTH_KEY@@@/${SATELLITE_AUTHKEY}/g" /usr/local/sbin/renew-satellite-docker-container.sh
 chmod 700 /usr/local/sbin/renew-satellite-docker-container.sh
 # Run the cronjobs at 00:00 on sundays (try to avoid the time of the default force-reconnect on most routers)
 # Renew the renewal script weekly
