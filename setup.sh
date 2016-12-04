@@ -171,11 +171,14 @@ systemctl daemon-reload
 
 ### END ###
 
-# Print statistics relevant for us (provider numbers and so on)
+# Save origin
+echo $origin > /root/origin-during-setup.txt
+chmod -v 600 /root/origin-during-setup.txt
+
+# Print completed message
 tput setf 2
 echo -e "============================================================================================================="
 echo -e "INSTALLATION COMPLETED"
-echo -e "Please send the following sensitive information to Blunix GmbH:\n"
 echo -e "Origin: $origin"
 echo -e "\nThis machine will reboot in 60 seconds to complete the installation."
 echo -e "If this machine was set up the first time, after the reboot login and run this script:"
