@@ -6,6 +6,7 @@
 
 #set -x
 
+# sed sets this during setup.sh
 SATELLITE_AUTHKEY='@@@SATELLITE_AUTH_KEY@@@'
 
 
