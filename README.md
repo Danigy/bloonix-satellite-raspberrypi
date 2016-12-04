@@ -111,6 +111,22 @@ When the variables are set, start the installation. This might take around ten m
 $ ./setup.sh
 ```
 
+When the script is finished, it will tell so and automatically reboot 60 seconds later. After the reboot, execute the following script to create the first Bloonix Satellite Docker container on the Raspberry Pi:
+
+```
+$ /usr/local/sbin/renew-satellite-docker-container.sh
+$ systemctl restart docker-bloonix-satellite.service
+```
+
+To check the status of the systemd service governing the docker container during reboots run:
+```
+$ systemctl status docker-bloonix-satellite.service
+```
+
+To show the logfiles of current production container: 
+```
+$ docker logs BloonixSatellite
+```
 
 ### 4) Setup your router for the Raspberry Pi
 
