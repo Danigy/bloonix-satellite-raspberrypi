@@ -22,29 +22,29 @@ TIME_ZONE='Europe/Berlin'
 #set -x
 
 
-tput setf 2; echo -e '## Secure the root account - disable passwords for it\n\n'; tput sgr0
+tput setf 2; echo -e '\n## Secure the root account - disable passwords for it'; tput sgr0
 
 passwd -l -d root
 
 
-tput setf 2; echo -e '## Set timezone\n\n'; tput sgr0
+tput setf 2; echo -e '\n## Set timezone'; tput sgr0
 
 export DEBCONF_NONINTERACTIVE_SEEN=true DEBIAN_FRONTEND=noninteractive
 echo $TIME_ZONE > /etc/timezone
 dpkg-reconfigure tzdata
 
 
-tput setf 2; echo -e '## Createing a 2 GB swapfile - this takes around three minutes using a Samsung EVO 32GB Class 10 SD card\n\n'; tput sgr0
+tput setf 2; echo -e '\n## Createing a 2 GB swapfile - this takes around three minutes using a Samsung EVO 32GB Class 10 SD card'; tput sgr0
 
 test -f /var/opt/swapfile.img || dd if=/dev/zero bs=1M count=2048 of=/var/opt/swapfile.img
-chmod 0600 /var/opt/swapfile.img
+chmod -v 0600 /var/opt/swapfile.img
 sync
 mkswap /var/opt/swapfile.img
 grep swap /etc/fstab || echo '/var/opt/swapfile.img none swap sw 0 0' >> /etc/fstab
 swapon -a
 
 
-tput setf 2; echo -e '## Installing packages\n\n'; tput sgr0
+tput setf 2; echo -e '\n## Installing packages'; tput sgr0
 
 # Enable required contrib sources for apt-transport-https
 echo -e 'deb http://mirrordirector.raspbian.org/raspbian jessie main firmware non-free\ndeb http://archive.raspberrypi.org/debian jessie main' > /etc/apt/sources.list
@@ -62,7 +62,7 @@ apt-get update; apt-get -y install docker-hypriot
 # installation will fail, we have to reboot, then it works
 
 
-#tput setf 2; echo -e '## Set hostname (its not really required to set the hostname..)\n\n'; tput sgr0
+#tput setf 2; echo -e '\n## Set hostname (its not really required to set the hostname..)'; tput sgr0
 
 current_public_ip="$(wget http://ipinfo.io/ip -qO -)"
 #domain='example.sat.com'
@@ -75,7 +75,7 @@ host_part=$origin
 #echo $full_host_name > /etc/hostname
 
 
-tput setf 2; echo -e '## Setting up a cronjob to renew the bloonix satellite docker image and container\n\n'; tput sgr0
+tput setf 2; echo -e '\n## Setting up a cronjob to renew the bloonix satellite docker image and container'; tput sgr0
 
 # Download the docker container and image renewal script
 wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/renew-satellite-docker-container-cronjob.sh -O /usr/local/sbin/renew-satellite-docker-container.sh
@@ -84,13 +84,13 @@ chmod 700 /usr/local/sbin/renew-satellite-docker-container.sh
 # Run the cronjobs at 00:00 on sundays (try to avoid the time of the default force-reconnect on most routers)
 # Renew the renewal script weekly
 grep '' /var/spool/cron/crontabs/root || \
-    crontab -l | { cat; echo "0 0 * * 0 wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/renew-satellite-docker-container-cronjob.sh -O /usr/local/sbin/renew-satellite-docker-container.sh"; } | crontab -
+    crontab -l | { cat; echo "0 0 * * 0 wget -q https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/renew-satellite-docker-container-cronjob.sh -O /usr/local/sbin/renew-satellite-docker-container.sh"; } | crontab -
 # Run the renewal script weekly
 grep 'renew-satellite-docker-container' /var/spool/cron/crontabs/root || \
     crontab -l | { cat; echo "5 0 * * 0 /usr/local/sbin/renew-satellite-docker-container.sh"; } | crontab -
 
 
-tput setf 2; echo -e '## Blacklisting the drivers for wlan and bluetooth\n\n'; tput sgr0
+tput setf 2; echo -e '\n## Blacklisting the drivers for wlan and bluetooth'; tput sgr0
 
 # Wlan
 echo -e 'blacklist brcmfmac\nblacklist brcmutil' > /etc/modprobe.d/raspi-blacklist.conf
@@ -102,7 +102,7 @@ modprobe -r -v btbcm
 modprobe -r -v hci_uart
 
 
-tput setf 2; echo -e '## Setting up shorewall\n\n'; tput sgr0
+tput setf 2; echo -e '\n## Setting up shorewall'; tput sgr0
 
 # /etc/shorewall/interfaces
 echo '?FORMAT 2
@@ -140,7 +140,7 @@ STARTOPTIONS=""
 startup=1' > /etc/default/shorewall
 
 
-tput setf 2; echo -e '## Enabling openvpn\n\n'; tput sgr0
+tput setf 2; echo -e '\n## Enabling openvpn'; tput sgr0
 if ifconfig | grep tun; then
     mv -v /root/*tar.gz /etc/openvpn/
     cd /etc/openvpn/
@@ -148,7 +148,7 @@ if ifconfig | grep tun; then
 fi
 
 
-tput setf 2; echo -e '## Setting up systemd to always spawn our Container on startup\n\n'; tput sgr0
+tput setf 2; echo -e '\n## Setting up systemd to always spawn our Container on startup'; tput sgr0
 
 # Create a systemd config file
 echo '[Unit]
@@ -168,20 +168,21 @@ WantedBy=default.target' > /etc/systemd/system/docker-bloonix-satellite.service
 systemctl daemon-reload
 
 
-tput setf 2; echo -e '## Start the container for the first time\n\n'; tput sgr0
-/usr/local/sbin/renew-satellite-docker-container.sh
-
-
 
 ### END ###
 
 # Print statistics relevant for us (provider numbers and so on)
-echo -e "=============================================================================================================\n"
-echo -e "\nINSTALLATION COMPLETED\n\n\n"
+tput setf 2
+echo -e "============================================================================================================="
+echo -e "INSTALLATION COMPLETED"
 echo -e "Please send the following sensitive information to Blunix GmbH:\n"
-echo -e "Origin: $origin\n\n"
-echo -e "This machine will reboot in 60 seconds to complete the installation. Press CRTL+C to abort.\n"
+echo -e "Origin: $origin"
+echo -e "\nThis machine will reboot in 60 seconds to complete the installation."
+echo -e "If this machine was set up the first time, after the reboot login and run this script:"
+echo -e "/usr/local/sbin/renew-satellite-docker-container.sh"
+echo -e "\nPress CRTL+C to abort reboot countdown\n"
 echo -e "=============================================================================================================\n"
+tput sgr0
 
 # Sleep and while and then reboot for the kernel changes to take effect
 secs=60
