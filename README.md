@@ -107,7 +107,7 @@ When the variables are set, start the installation. This might take around ten m
 
 When the script is finished, it will tell so and automatically reboot 60 seconds later.  
 
-When the Raspberry Pi has booted again, log back in via SSH and execute the following script to create the first Bloonix Satellite Docker container on the Raspberry Pi:
+When the Raspberry Pi has booted again, log back in via SSH and execute the following script to create the first Bloonix Satellite Docker container:
 
 ```bash
 /usr/local/sbin/renew-satellite-docker-container.sh
