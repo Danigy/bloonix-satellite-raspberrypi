@@ -181,8 +181,11 @@ echo -e "=======================================================================
 echo -e "INSTALLATION COMPLETED"
 echo -e "Origin: $origin"
 echo -e "\nThis machine will reboot in 60 seconds to complete the installation."
-echo -e "If this machine was set up the first time, after the reboot login and run this script:"
+echo -e "If this machine was set up the first time, after the reboot login and run this script:\n"
 echo -e "/usr/local/sbin/renew-satellite-docker-container.sh"
+echo -e "systemctl restart docker-bloonix-satellite.service"
+echo -e "systemctl status docker-bloonix-satellite.service"
+echo -e "docker logs BloonixSatellite"
 echo -e "\nPress CRTL+C to abort reboot countdown\n"
 echo -e "=============================================================================================================\n"
 tput sgr0
