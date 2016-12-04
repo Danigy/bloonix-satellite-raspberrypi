@@ -82,13 +82,12 @@ wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-cl
 sed -i "s/@@@SATELLITE_AUTH_KEY@@@/${SATELLITE_AUTHKEY}/g" /usr/local/sbin/renew-satellite-docker-container.sh
 chmod 700 /usr/local/sbin/renew-satellite-docker-container.sh
 # Run the cronjobs at 00:00 on sundays (try to avoid the time of the default force-reconnect on most routers)
-# Renew the renewal script weekly
-grep '' /var/spool/cron/crontabs/root || \
+if ! grep bloonix /var/spool/cron/crontabs/root; then
+    # Renew the renewal script weekly
     crontab -l | { cat; echo "0 0 * * 0 wget -q https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/renew-satellite-docker-container-cronjob.sh -O /usr/local/sbin/renew-satellite-docker-container.sh"; } | crontab -
-# Run the renewal script weekly
-grep 'renew-satellite-docker-container' /var/spool/cron/crontabs/root || \
+    # Run the renewal script weekly
     crontab -l | { cat; echo "5 0 * * 0 /usr/local/sbin/renew-satellite-docker-container.sh"; } | crontab -
-
+fi
 
 tput setf 2; echo -e '\n## Blacklisting the drivers for wlan and bluetooth'; tput sgr0
 
