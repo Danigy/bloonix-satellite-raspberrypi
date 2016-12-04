@@ -1,7 +1,9 @@
 ## Bloonix Satellite Installation Instructions for Raspberry Pi 3 Model B
 
 
-This manual explains how to install Bloonix Satellite with Docker on the Raspberry Pi Model B.
+This manual explains how to install Bloonix Satellite with Docker on the Raspberry Pi Model B:
+
+![Network Plan](network-plan.jpg)
 
 
 ### 1) Install minibian to a micro SD Card
