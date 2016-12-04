@@ -39,6 +39,7 @@ echo -e "d\n2\nn\np\n2\n${start_sector}\n\nw" | sudo fdisk ${SD_CARD_DEVICE_FILE
 sudo sync
 sudo e2fsck -f ${SD_CARD_DEVICE_FILE}p2
 sudo resize2fs ${SD_CARD_DEVICE_FILE}p2
+sudo sync; sudo partprobe
 ```
 
 Expected output:
