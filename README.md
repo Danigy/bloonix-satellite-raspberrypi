@@ -22,12 +22,11 @@ Disk /dev/mmcblk0: 32.0 GB, 32010928128 bytes
 
 Go to [sourceforge.net/projects/minibian](https://sourceforge.net/projects/minibian/), download the latest minibian image and
 unpack the archive.  Write the minibian image to the SD card:
-```
+```bash
 # Replace with filename of latest image
-$ sudo dd if=2016-03-12-jessie-minibian.img | pv | dd of=/dev/mmcblk0; sudo sync; sudo partprobe
-1626112+0 records in
-1626112+0 records out
-832569344 bytes (833 MB) copied, 107.735 s, 7.7 MB/s
+sudo dd if=2016-03-12-jessie-minibian.img | pv | dd of=/dev/mmcblk0
+sudo sync
+sudo partprobe
 ```
 
 These commands will resize the root partition on the SD card to the maximum available space. Copy paste them to the terminal on your Laptop - make sure to set the first variable according to your SD Cards device file name!
@@ -78,52 +77,49 @@ The installation of minibian on the SD card is now complete. Insert it into the 
 ### 2) Setup SSH to the Raspberry Pi
 
 Copy your SSH public key to the Raspberry Pi - the password is "raspberry" by default
-```
+```bash
 ssh-copy-id root@minibian
 ```
 
-Copy over any files required later
+Copy over all required files:
+```bash
+scp setup.sh root@minibian:/root/
 ```
+
+Copy over any additional files you might need, like a VPN client setup archive:
+```bash
 scp vpn-archive.tar.gz root@minibian:
-[...]
 ```
 
 
-### 3) Install docker and the Bloonix Satellite service on the Raspberry Pi
+### 3) Start the installation script on the Raspberry Pi
 
-Login to the Raspberry Pi, then download the installation script:
-```
-$ ssh root@minibian
-$ wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/setup.sh
-$ chmod 700 setup.sh
-```
-
-Some variables have to be set in the script for the installation to work properly. You can install the `nano` editor first if you are not familiar with `vi`:
-```
-$ apt-get update; apt-get -y install nano
-$ nano setup.sh
+Now login to the Raspberry Pi. Some variables have to be set in the script for the installation to work properly. You can install the `nano` editor first if you are not familiar with the pre-installed `vi`:
+```bash
+apt-get update; apt-get -y install nano
+nano setup.sh
 ```
 
 When the variables are set, start the installation. This might take around ten minutes, depending on your internet speed and class of SD card.
-```
-$ ./setup.sh
+```bash
+./setup.sh
 ```
 
 When the script is finished, it will tell so and automatically reboot 60 seconds later. After the reboot, execute the following script to create the first Bloonix Satellite Docker container on the Raspberry Pi:
 
-```
-$ /usr/local/sbin/renew-satellite-docker-container.sh
-$ systemctl restart docker-bloonix-satellite.service
+```bash
+/usr/local/sbin/renew-satellite-docker-container.sh
+systemctl restart docker-bloonix-satellite.service
 ```
 
 To check the status of the systemd service governing the docker container during reboots run:
-```
-$ systemctl status docker-bloonix-satellite.service
+```bash
+systemctl status docker-bloonix-satellite.service
 ```
 
 To show the logfiles of current production container: 
-```
-$ docker logs BloonixSatellite
+```bash
+docker logs BloonixSatellite
 ```
 
 ### 4) Setup your router for the Raspberry Pi
