@@ -105,7 +105,9 @@ When the variables are set, start the installation. This might take around ten m
 ./setup.sh
 ```
 
-When the script is finished, it will tell so and automatically reboot 60 seconds later. After the reboot, execute the following script to create the first Bloonix Satellite Docker container on the Raspberry Pi:
+When the script is finished, it will tell so and automatically reboot 60 seconds later.  
+
+When the Raspberry Pi has booted again, log back in via SSH and execute the following script to create the first Bloonix Satellite Docker container on the Raspberry Pi:
 
 ```bash
 /usr/local/sbin/renew-satellite-docker-container.sh
@@ -122,7 +124,7 @@ To show the logfiles of current production container:
 docker logs BloonixSatellite
 ```
 
-### 4) Setup your router for the Raspberry Pi
+### 4) Configure your router for the Raspberry Pi
 
 The Raspberry Pi should be connected to a network where it can not reach any other members of the local network - it should have a subnet to itself. Shorewall rules setup during the installation routine further prevent this.
 
