@@ -24,13 +24,10 @@ Go to [sourceforge.net/projects/minibian](https://sourceforge.net/projects/minib
 unpack the archive.  Write the minibian image to the SD card:
 ```
 # Replace with filename of latest image
-$ sudo dd if=2016-03-12-jessie-minibian.img | pv | dd of=/dev/mmcblk0
+$ sudo dd if=2016-03-12-jessie-minibian.img | pv | dd of=/dev/mmcblk0; sudo sync; sudo partprobe
 1626112+0 records in
 1626112+0 records out
 832569344 bytes (833 MB) copied, 107.735 s, 7.7 MB/s
-
-$ sudo sync
-$ sudo partprobe
 ```
 
 These commands will resize the root partition on the SD card to the maximum available space. Copy paste them to the terminal on your Laptop - make sure to set the first variable according to your SD Cards device file name!
