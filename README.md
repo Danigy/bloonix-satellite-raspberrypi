@@ -8,6 +8,7 @@ This manual explains how to install Bloonix Satellite with Docker on the Raspber
 
 ### 1) Install minibian to a micro SD Card
 
+**Insert the SD card**  
 Insert the Micro SD Card into your Laptop and use the following command to determine the name of the new device:
 
 ```
@@ -22,8 +23,9 @@ Disk /dev/mmcblk0: 32.0 GB, 32010928128 bytes
 [...]
 ```
 
+**Flash minibian to the SD card**  
 Go to [sourceforge.net/projects/minibian](https://sourceforge.net/projects/minibian/), download the latest minibian image and
-unpack the archive.  Write the minibian image to the SD card:
+unpack the archive.  Write (or "flash") the minibian image to the SD card:
 ```bash
 # Replace with filename of latest image
 sudo dd if=2016-03-12-jessie-minibian.img | pv | dd of=/dev/mmcblk0
@@ -31,6 +33,7 @@ sudo sync
 sudo partprobe
 ```
 
+**Resize the / partition to max space**  
 These commands will resize the root partition on the SD card to the maximum available space. Copy paste them to the terminal on your Laptop - make sure to set the first variable according to your SD Cards device file name!
 ```bash
 # Set this to your SD card device!
@@ -43,7 +46,7 @@ sudo resize2fs ${SD_CARD_DEVICE_FILE}p2
 sudo sync; sudo partprobe
 ```
 
-Expected output:
+**Expected resize output:**  
 ```
 $ SD_CARD_DEVICE_FILE='/dev/mmcblk0'
 $ start_sector=$(sudo fdisk -l ${SD_CARD_DEVICE_FILE} | grep ${SD_CARD_DEVICE_FILE}p2 |  awk '{ print $2 }')
@@ -73,16 +76,18 @@ Resizing the filesystem on /dev/mmcblk0p2 to 7799536 (4k) blocks.
 The filesystem on /dev/mmcblk0p2 is now 7799536 blocks long.
 ```
 
+**Done formatting the SD card**  
 The installation of minibian on the SD card is now complete. Insert it into the Raspberry Pi, attach it to a cable LAN in your network and to a power outlet to boot it.
 
 
 ### 2) Setup SSH to the Raspberry Pi
 
+**Setup SSH**  
 Copy your SSH public key to the Raspberry Pi - the password is "raspberry" by default
 ```bash
 ssh-copy-id root@minibian
 ```
-
+**Copy required files**  
 Copy over all required files:
 ```bash
 scp setup.sh root@minibian:/root/
@@ -96,12 +101,13 @@ scp vpn-archive.tar.gz root@minibian:
 
 ### 3) Start the installation script on the Raspberry Pi
 
+**Edit the setup script variables**  
 Now login to the Raspberry Pi. Some variables have to be set in the script for the installation to work properly. You can install the `nano` editor first if you are not familiar with the pre-installed `vi`:
 ```bash
 apt-get update; apt-get -y install nano
 nano setup.sh
 ```
-
+**Start the setup**  
 When the variables are set, start the installation. This might take around ten minutes, depending on your internet speed and class of SD card.
 ```bash
 ./setup.sh
@@ -115,7 +121,7 @@ When the Raspberry Pi has booted again, log back in via SSH and execute the foll
 /usr/local/sbin/renew-satellite-docker-container.sh
 systemctl restart docker-bloonix-satellite.service
 ```
-
+**System status**  
 To check the status of the systemd service governing the docker container during reboots run:
 ```bash
 systemctl status docker-bloonix-satellite.service
