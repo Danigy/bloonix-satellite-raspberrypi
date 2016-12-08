@@ -130,14 +130,19 @@ docker logs BloonixSatellite
 
 While this is not required for operation, it is highly recommended for your own home networks security. The Raspberry Pi should be attached to a local private network where it can not reach any other members of your local network - it should have a subnet to itself. Shorewall rules setup during the installation routine further prevent this.
 
-Common routers like AVM Fritz Box:  
+**Common routers like AVM Fritz Box:**  
 Most common routers, like RVM Fritz Box'es, provide the option to assign one lan network port to a "guest network", which cant reach the other networks. Thats what you want to set up, however make sure that nobody else (no house guests) use that network. Also check if the guest wlan provided by your Fritz Box or router allows interactions to and from the guest LAN network.
 
-More expensive routers:  
-If you can setup a prover VLAN, thats even better. 
+This following screenshot shows you the correct settings for a FritzBox 7362 SL. I sadly did not find a way to switch the language to english. Go to Homenetwork -> Homenetwork overview -> Network settings -> set a checkbox at "Guest access active on LAN port 4".
 
+![FritzBox setup](setup-fritzbox-guest-lan-port.png)
 
-Note:  
+After setting this up, make sure to test your setup! Connect your laptop to the particular LAN port - if everything works correctly, you should be assigned a different gateway IP than your regular homenetwork. Also you should not be able to access http://fritz.box or similar web interface. You should also be unable to Ping or connect to any machines in connected to your home network via LAN or WLAN.
+
+**Routers with VLAN capability:**  
+If you can setup a proper VLAN, thats even better.
+
+**Note:**  
 The setup script disables wlan and bluetooth and the Raspberry Pi by unloading and blacklisting the drivers.
 You are hence only access the device via SSH if you are in the same LAN network.
 
