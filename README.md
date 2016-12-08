@@ -143,8 +143,6 @@ This following screenshot shows you the correct settings for a FritzBox 7362 SL.
 
 ![FritzBox setup](setup-fritzbox-guest-lan-port.png)
 
-After setting this up, make sure to test your setup! Connect your laptop to the particular LAN port - if everything works correctly, you should be assigned a different gateway IP than your regular homenetwork. Also you should not be able to access http://fritz.box or similar web interface. You should also be unable to Ping or connect to any machines in connected to your home network via LAN or WLAN.
-
 **Routers with VLAN capability:**  
 If you can setup a proper VLAN, thats even better.
 
@@ -152,5 +150,8 @@ If you can setup a proper VLAN, thats even better.
 The setup script disables wlan and bluetooth and the Raspberry Pi by unloading and blacklisting the drivers.
 You are hence only access the device via SSH if you are in the same LAN network.
 
+**Test your setup!**  
+After setting this up, make sure to test your setup! Connect your laptop to the particular LAN port - if everything works correctly, you should be assigned a different gateway IP than your regular homenetwork. Also you should not be able to access http://fritz.box or similar web interface. You should also be unable to Ping or connect to any machines in connected to your home network via LAN or WLAN.
 
+**Done**  
 After the Raspberry Pi is attached to a secure LAN port the installation is finished.
