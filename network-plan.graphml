@@ -64,37 +64,6 @@
       <data key="d5"/>
       <data key="d6">
         <y:SVGNode>
-          <y:Geometry height="121.23199844360352" width="97.09529876708984" x="1295.1190172831223" y="590.7680015563965"/>
-          <y:Fill color="#CCCCFF" transparent="false"/>
-          <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="59.875" modelName="custom" textColor="#000000" visible="true" width="288.42578125" x="138.33475875854447" y="30.678499221801758">Admin OpenVPN Server
-
-Allows for administrative access to the Raspis.
-OpenVPN-Server Service is disabled by default.<y:LabelModel>
-              <y:SmartNodeLabelModel distance="4.0"/>
-            </y:LabelModel>
-            <y:ModelParameter>
-              <y:SmartNodeLabelModelParameter labelRatioX="-0.5" labelRatioY="0.0" nodeRatioX="0.5" nodeRatioY="0.0" offsetX="41.23945999145462" offsetY="0.0" upX="0.0" upY="-1.0"/>
-            </y:ModelParameter>
-          </y:NodeLabel>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="custom" textColor="#000000" visible="true" width="126.71875" x="-14.811725616455078" y="-43.752376556396484">admin.example.com<y:LabelModel>
-              <y:SmartNodeLabelModel distance="4.0"/>
-            </y:LabelModel>
-            <y:ModelParameter>
-              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.5" nodeRatioX="0.0" nodeRatioY="-0.5" offsetX="0.0" offsetY="-25.783626556396484" upX="0.0" upY="-1.0"/>
-            </y:ModelParameter>
-          </y:NodeLabel>
-          <y:SVGNodeProperties usingVisualBounds="true"/>
-          <y:SVGModel svgBoundsPolicy="0">
-            <y:SVGContent refid="1"/>
-          </y:SVGModel>
-        </y:SVGNode>
-      </data>
-    </node>
-    <node id="n4">
-      <data key="d5"/>
-      <data key="d6">
-        <y:SVGNode>
           <y:Geometry height="121.23199844360352" width="126.0" x="1626.0000000000005" y="285.88400077819824"/>
           <y:Fill color="#CCCCFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
@@ -112,7 +81,7 @@ OpenVPN-Server Service is disabled by default.<y:LabelModel>
         </y:SVGNode>
       </data>
     </node>
-    <node id="n5">
+    <node id="n4">
       <data key="d5"/>
       <data key="d6">
         <y:SVGNode>
@@ -134,7 +103,7 @@ OpenVPN-Server Service is disabled by default.<y:LabelModel>
         </y:SVGNode>
       </data>
     </node>
-    <node id="n6">
+    <node id="n5">
       <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
@@ -149,7 +118,7 @@ per Bloonix Server</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n7">
+    <node id="n6">
       <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
@@ -164,7 +133,7 @@ Members connected to this Router</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n8">
+    <node id="n7">
       <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
@@ -179,7 +148,7 @@ Source IP and Destination Port</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n9">
+    <node id="n8">
       <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
@@ -194,7 +163,7 @@ This CNAME Record points to dsl.satellite.example.com</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n10">
+    <node id="n9">
       <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
@@ -209,7 +178,7 @@ SMTP, IMAP, FTP, TCP, PING, ...</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n11">
+    <node id="n10">
       <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
@@ -221,7 +190,7 @@ SMTP, IMAP, FTP, TCP, PING, ...</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n12">
+    <node id="n11">
       <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
@@ -233,7 +202,7 @@ SMTP, IMAP, FTP, TCP, PING, ...</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n13">
+    <node id="n12">
       <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
@@ -264,7 +233,7 @@ SMTP, IMAP, FTP, TCP, PING, ...</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e1" source="n1" target="n4">
+    <edge id="e1" source="n1" target="n3">
       <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
@@ -283,7 +252,7 @@ SMTP, IMAP, FTP, TCP, PING, ...</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e2" source="n4" target="n1">
+    <edge id="e2" source="n3" target="n1">
       <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
@@ -340,29 +309,7 @@ SMTP, IMAP, FTP, TCP, PING, ...</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e5" source="n1" target="n3">
-      <data key="d9"/>
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="26.999999999999773" sy="1.0" tx="26.999999999999545" ty="-20.384000778198242"/>
-          <y:LineStyle color="#808080" type="dotted" width="1.0"/>
-          <y:Arrows source="none" target="delta"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e6" source="n3" target="n1">
-      <data key="d9"/>
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="-22.000000000000455" sy="-4.384000778198242" tx="-22.000000000000227" ty="2.0"/>
-          <y:LineStyle color="#808080" type="dotted" width="1.0"/>
-          <y:Arrows source="none" target="delta"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e7" source="n2" target="n1">
+    <edge id="e5" source="n2" target="n1">
       <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
