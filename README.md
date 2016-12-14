@@ -38,7 +38,7 @@ These commands will resize the root partition on the SD card to the maximum avai
 ```bash
 # Set this to your SD card device!
 SD_CARD_DEVICE_FILE='/dev/mmcblk0'
-start_sector=$(sudo fdisk -l ${SD_CARD_DEVICE_FILE} | grep ${SD_CARD_DEVICE_FILE}p2 |  awk '{ print $2 }')
+start_sector=$(sudo fdisk -l ${SD_CARD_DEVICE_FILE} | grep ${SD_CARD_DEVICE_FILE}p2 | awk '{ print $2 }')
 echo -e "d\n2\nn\np\n2\n${start_sector}\n\nw" | sudo fdisk ${SD_CARD_DEVICE_FILE}
 sudo sync
 sudo e2fsck -f ${SD_CARD_DEVICE_FILE}p2
@@ -49,7 +49,7 @@ sudo sync; sudo partprobe
 **Expected resize output:**  
 ```
 $ SD_CARD_DEVICE_FILE='/dev/mmcblk0'
-$ start_sector=$(sudo fdisk -l ${SD_CARD_DEVICE_FILE} | grep ${SD_CARD_DEVICE_FILE}p2 |  awk '{ print $2 }')
+$ start_sector=$(sudo fdisk -l ${SD_CARD_DEVICE_FILE} | grep ${SD_CARD_DEVICE_FILE}p2 | awk '{ print $2 }')
 $ echo -e "d\n2\nn\np\n2\n${start_sector}\n\nw" | sudo fdisk ${SD_CARD_DEVICE_FILE}
 Command (m for help): Partition number (1-4): 
 Command (m for help): Partition type:
@@ -81,13 +81,14 @@ Mount the resized root partition and copy over the required installer files:
 ```
 sudo mount /dev/mmcblk0p2 /mnt
 sudo wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-raspberrypi/master/setup.sh -O /mnt/root/setup.sh
-chmod 700 /mnt/root/setup.sh
+sudo chmod 700 /mnt/root/setup.sh
 sudo wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-raspberrypi/master/config.sh -O /mnt/root/config.sh
 ```
 
 You may want to copy OpenVPN Client configuration files as well. To set up your ssh public key so you can directly login as root via `root@minibian` - depending on your routers local DNS setup:
 ```
 sudo cp ~/.ssh/id_rsa.pub /mnt/root/.ssh/authorized_keys
+sudo chown root:root /mnt/root/.ssh/authorized_keys
 sudo chmod 600 /mnt/root/.ssh/authorized_keys
 ```
 
