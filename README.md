@@ -105,6 +105,12 @@ The installation of minibian on the SD card is now complete. Insert it into the 
 
 ### 2) Start the installation script on the Raspberry Pi
 
+**Login to the Raspberry Pi**  
+Depending on your routers configuration, you should now be able to reach the Raspberry Pi as `minibian`.
+```
+ssh root@minibian
+```
+
 **Edit the setup script variables**  
 Now login to the Raspberry Pi. Some variables have to be set for the `setup.sh` installation script to work properly.
 ```bash
@@ -136,7 +142,7 @@ To show the logfiles of current production container:
 docker logs BloonixSatellite
 ```
 
-### 4) Configure your router for the Raspberry Pi
+### 3) Configure your router for the Raspberry Pi
 
 While this is not required for operation, it is highly recommended for your own home networks security. The Raspberry Pi should be attached to a local private network where it can not reach any other members of your local network - it should have a subnet to itself. Shorewall rules setup during the installation routine further prevent this.
 
