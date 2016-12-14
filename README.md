@@ -87,8 +87,10 @@ sudo wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-r
 
 You may want to copy OpenVPN Client configuration files as well. To set up your ssh public key so you can directly login as root via `root@minibian` - depending on your routers local DNS setup:
 ```
+sudo mkdir /mnt/root/.ssh
 sudo cp ~/.ssh/id_rsa.pub /mnt/root/.ssh/authorized_keys
-sudo chown root:root /mnt/root/.ssh/authorized_keys
+sudo chown -R root:root /mnt/root/.ssh
+sudo chmod 700 /mnt/root/.ssh
 sudo chmod 600 /mnt/root/.ssh/authorized_keys
 ```
 
