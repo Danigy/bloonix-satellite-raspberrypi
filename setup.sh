@@ -3,18 +3,8 @@
 # Setup the running raspberrypi
 
 
-### PLEASE CHANGE THOSE VARIABLES ###
-
-# Enter the satellite authkey provided by Blunix GmbH
-SATELLITE_AUTHKEY='secret_longer_than_32_characters_bloonix_satellite_authkey'
-
-# Setup data about the VPN server that is used to forward requests to this Raspberry Pi
-VPN_SERVER_IP='123.123.123.123'
-VPN_SERVER_PORT='1194'
-VPN_SERVER_INTERNAL_IP='10.10.0.1'
-
-# Set your local timezone
-TIME_ZONE='Europe/Berlin'
+# Source the config file
+source config.sh
 
 
 ### MAIN ###
