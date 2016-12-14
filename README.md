@@ -77,11 +77,12 @@ The filesystem on /dev/mmcblk0p2 is now 7799536 blocks long.
 ```
 
 **Copy required installer files**
-Mount the resized root partition and copy over all required files:
+Mount the resized root partition and copy over the required installer files:
 ```
 sudo mount /dev/mmcblk0p2 /mnt
-sudo cp setup.sh config.sh /mnt/root/
-sudo cp renew-satellite-docker-container-cronjob.sh /mnt/usr/local/sbin/
+sudo wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-raspberrypi/master/setup.sh -O /mnt/root/setup.sh
+chmod 700 /mnt/root/setup.sh
+sudo wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-raspberrypi/master/config.sh -O /mnt/root/config.sh
 ```
 
 You may want to copy OpenVPN Client configuration files as well. To set up your ssh public key so you can directly login as root via `root@minibian` - depending on your routers local DNS setup:
