@@ -28,7 +28,7 @@ Go to [sourceforge.net/projects/minibian](https://sourceforge.net/projects/minib
 unpack the archive.  Write (or "flash") the minibian image to the SD card:
 ```bash
 # Replace with filename of latest image
-sudo dd if=2016-03-12-jessie-minibian.img | pv | dd of=/dev/mmcblk0
+dd if=2016-03-12-jessie-minibian.img | pv | sudo dd of=/dev/mmcblk0
 sudo sync
 sudo partprobe
 ```
