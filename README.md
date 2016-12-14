@@ -76,37 +76,37 @@ Resizing the filesystem on /dev/mmcblk0p2 to 7799536 (4k) blocks.
 The filesystem on /dev/mmcblk0p2 is now 7799536 blocks long.
 ```
 
+**Copy required installer files**
+Mount the resized root partition and copy over all required files:
+```
+sudo mount /dev/mmcblk0p2 /mnt
+sudo cp setup.sh config.sh /mnt/root/
+sudo cp renew-satellite-docker-container-cronjob.sh /mnt/usr/local/sbin/
+```
+
+You may want to copy OpenVPN Client configuration files as well. To set up your ssh public key so you can directly login as root via `root@minibian` - depending on your routers local DNS setup:
+```
+sudo cp ~/.ssh/id_rsa.pub /mnt/root/.ssh/authorized_keys
+sudo chmod 600 /mnt/root/.ssh/authorized_keys
+```
+
+When you are done copying files unmount the root partition on the SD card:
+```
+sudo umount /mnt
+```
+
 **Done formatting the SD card**  
 The installation of minibian on the SD card is now complete. Insert it into the Raspberry Pi, attach it to a cable LAN in your network and to a power outlet to boot it.
 
 
-### 2) Setup SSH to the Raspberry Pi
-
-**Setup SSH**  
-Copy your SSH public key to the Raspberry Pi - the password is "raspberry" by default
-```bash
-ssh-copy-id root@minibian
-```
-**Copy required files**  
-Copy over all required files:
-```bash
-scp setup.sh config.sh root@minibian:/root/
-```
-
-Copy over any additional files you might need, like a VPN client setup archive:
-```bash
-scp vpn-archive.tar.gz root@minibian:
-```
-
-
-### 3) Start the installation script on the Raspberry Pi
+### 2) Start the installation script on the Raspberry Pi
 
 **Edit the setup script variables**  
-Now login to the Raspberry Pi. Some variables have to be set in the script for the installation to work properly. You can install the `nano` editor first if you are not familiar with the pre-installed `vi`:
+Now login to the Raspberry Pi. Some variables have to be set for the `setup.sh` installation script to work properly.
 ```bash
-apt-get update; apt-get -y install nano
-nano setup.sh
+vi config.sh
 ```
+
 **Start the setup**  
 When the variables are set, start the installation. This might take around ten minutes, depending on your internet speed and class of SD card.
 ```bash
