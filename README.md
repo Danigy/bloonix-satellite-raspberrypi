@@ -3,7 +3,7 @@
 
 This manual explains how to install Bloonix Satellite with Docker on the Raspberry Pi Model B:
 
-![Network Plan](network-plan.jpg)
+![Network Plan](images/network-plan.jpg)
 
 
 ### 1) Install minibian to a micro SD Card
@@ -90,7 +90,7 @@ ssh-copy-id root@minibian
 **Copy required files**  
 Copy over all required files:
 ```bash
-scp setup.sh root@minibian:/root/
+scp setup.sh config.sh root@minibian:/root/
 ```
 
 Copy over any additional files you might need, like a VPN client setup archive:
@@ -141,7 +141,7 @@ Most common routers, like RVM Fritz Box'es, provide the option to assign one lan
 
 This following screenshot shows you the correct settings for a FritzBox 7362 SL. I sadly did not find a way to switch the language to english. Go to Homenetwork -> Homenetwork overview -> Network settings -> set a checkbox at "Guest access active on LAN port 4".
 
-![FritzBox setup](setup-fritzbox-guest-lan-port.png)
+![FritzBox setup](images/setup-fritzbox-guest-lan-port.png)
 
 **Routers with VLAN capability:**  
 If you can setup a proper VLAN, thats even better.
