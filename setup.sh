@@ -179,7 +179,7 @@ tput setf 2
 echo -e "\n\n==INSTALLATION COMPLETED ================================================================================\n"
 echo -e "The hostname has changed, ssh to this machine using the new hostname or the IP bound on eth0:\n"
 echo -e "ssh root@$LOCAL_ETH_IP"
-echo -e "This machine will reboot in 60 seconds to complete the installation. Press CRTL+C to abort reboot countdown\n"
+echo -e "\nThis machine will reboot in 60 seconds to complete the installation. Press CRTL+C to abort reboot countdown\n"
 echo -e "=============================================================================================================\n"
 tput sgr0
 
