@@ -6,9 +6,9 @@
 
 
 ## Source the config file'
-source /root/bloonix-satellite-raspberrypi/config.sh
+source /opt/bloonix-satellite-raspberrypi/config.sh
 if [[ -z $SATELLITE_AUTHKEY ]]; then
-    echo 'The variable SATELLITE_AUTHKEY could not be sourced from /root/bloonix-satellite-raspberrypi/config.sh, aborting!'
+    echo 'The variable SATELLITE_AUTHKEY could not be sourced from /opt/bloonix-satellite-raspberrypi/config.sh, aborting!'
     exit 1
 fi
 
