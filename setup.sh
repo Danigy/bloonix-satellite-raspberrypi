@@ -5,7 +5,7 @@
 
 # Source the config file
 if ! /opt/bloonix-satellite-raspberrypi/source config.sh; then
-  echo 'Unable to source config.sh, aborting!'
+  echo 'Unable to source /opt/bloonix-satellite-raspberrypi/config.sh, aborting!'
   exit 1
 fi
 
@@ -169,8 +169,8 @@ tput setf 2; echo -e '\n## Setting up systemd to always spawn our Container on s
 # Create a systemd config file
 echo '[Unit]
 Description=Bloonix Satellite Docker Container
-Requires=docker.service
-After=docker.service
+Requires=docker.service openvpn.service
+After=docker.service openvpn.service
 
 [Service]
 Restart=always
