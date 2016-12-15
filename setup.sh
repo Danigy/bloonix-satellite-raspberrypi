@@ -61,10 +61,10 @@ tput setf 2; echo -e '\n## Set hostname (its not really required to set the host
 # The AS number for the DSL the raspi is connected to
 PUBLIC_IP="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 ORIGIN="$(whois $PUBLIC_IP | grep origin | awk '{print $2}')"
-full_host_name="${ORIGIN}.${DOMAIN}"
+full_host_name="${ORIGIN,,}.${DOMAIN}"
 hostname $full_host_name
 sed '/127.0.1.1/d' /etc/hosts
-echo "127.0.1.1 $full_host_name $ORIGIN" >> /etc/hosts
+echo "127.0.1.1 $full_host_name ${ORIGIN,,}" >> /etc/hosts
 echo $full_host_name > /etc/hostname
 
 # Setup a nice PS1 so the hostname is viewd
