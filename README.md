@@ -122,21 +122,15 @@ When the variables are set, start the installation. This might take around ten m
 /opt/bloonix-satellite-raspberrypi/setup.sh
 ```
 
-When the script is finished, it will tell so and automatically reboot 60 seconds later.  
+When the script is finished, it will tell so and automatically reboot 60 seconds later. After any reboot (and once a week via cron),
+the Raspberry Pi will check if the docker image has any updates. The check script is located in `/opt/bloonix-satellite-raspberrypi/renew-satellite-docker-container-cronjob.sh`.
 
-When the Raspberry Pi has booted again, log back in via SSH and execute the following script to create the first Bloonix Satellite Docker container:
-
-```bash
-/usr/local/sbin/renew-satellite-docker-container.sh
-systemctl restart docker-bloonix-satellite.service
-```
-**System status**  
-To check the status of the systemd service governing the docker container during reboots run:
+You should be able to login via ssh now. The hostname of the Raspberry Pi was changed, but the `setup.sh` script will tell you the currently bound IP so you can use that for ssh. To check the status of the services:
 ```bash
 systemctl status docker-bloonix-satellite.service
 ```
 
-To show the logfiles of current production container: 
+To show the logfiles of current Bloonix Satellite container:
 ```bash
 docker logs BloonixSatellite
 ```
