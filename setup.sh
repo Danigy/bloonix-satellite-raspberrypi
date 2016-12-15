@@ -66,7 +66,6 @@ PUBLIC_IP="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 ORIGIN="$(whois $PUBLIC_IP | grep origin | awk '{print $2}')"
 full_host_name="${ORIGIN,,}.${DOMAIN}"
 hostname $full_host_name
-sed '/127.0.1.1/d' /etc/hosts
 echo "127.0.0.1 localhost
 127.0.1.1 $full_host_name ${ORIGIN,,}" > /etc/hosts
 echo $full_host_name > /etc/hostname
@@ -109,6 +108,16 @@ modprobe -r -v hci_uart
 
 
 tput setf 2; echo -e '\n## Setting up shorewall'; tput sgr0
+
+
+# Shorewall concept:
+#
+# - OpenVPN Client
+# - Allow admin SSH access from openvpn server IP via VPN
+# - Allow access to bloonix satellite port from openvpn server IP via VPN
+# - Allow whats required for remote checks - http, smtp, imap, ...
+# - Drop everything else to private class networks
+# - Allow incoming ssh from all private class outside networks
 
 # /etc/shorewall/interfaces
 echo '?FORMAT 2
