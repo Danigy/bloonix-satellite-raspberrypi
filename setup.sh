@@ -43,7 +43,7 @@ tput setf 2; echo -e '\n## Installing packages'; tput sgr0
 # Enable required contrib sources for apt-transport-https
 echo -e 'deb http://mirrordirector.raspbian.org/raspbian jessie main firmware non-free\ndeb http://archive.raspberrypi.org/debian jessie main' > /etc/apt/sources.list
 # Get up to date
-#apt-get update; apt-get -y upgrade; apt-get -y dist-upgrade
+apt-get update; apt-get -y upgrade; apt-get -y dist-upgrade
 # Install required packages
 apt-get -y install unattended-upgrades whois wget openvpn curl apt-transport-https raspbian-archive-keyring haveged shorewall dnsutils ntpd
 # Enable unattended-upgrades
@@ -52,7 +52,7 @@ echo -e 'APT::Periodic::Update-Package-Lists "1";\nAPT::Periodic::Unattended-Upg
 # the following is extracted from: curl -s https://packagecloud.io/install/repositories/Hypriot/Schatzkiste/script.deb.sh | bash
 curl -L 'https://packagecloud.io/Hypriot/Schatzkiste/gpgkey' 2> /dev/null | apt-key add -
 echo 'deb https://packagecloud.io/Hypriot/Schatzkiste/raspbian/ jessie main' > /etc/apt/sources.list.d/Hypriot_Schatzkiste.list
-#apt-get update; apt-get -y install docker-hypriot
+apt-get update; apt-get -y install docker-hypriot
 # installation will fail, we have to reboot, then it works
 
 
