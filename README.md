@@ -122,7 +122,7 @@ When the variables are set, start the installation. This might take around ten m
 /opt/bloonix-satellite-raspberrypi/setup.sh
 ```
 
-When the script is finished, it will tell so and automatically reboot 60 seconds later and you should be able to login via SSH. The hostname of the Raspberry Pi was changed, but the `setup.sh` script will tell you the currently bound IP before it reboots. After any reboot (and once a week via cron), the Raspberry Pi will check if the docker image has any updates. The check script is located in `/opt/bloonix-satellite-raspberrypi/renew-satellite-docker-container-cronjob.sh`. After the first reboot, this script will take a while to pull the docker image and start the container. To check if the script is still running, execute:
+When the script is finished, it will tell so and automatically reboot 60 seconds later. You should then be able to login via SSH - Note that the hostname of the Raspberry Pi was changed, but the `setup.sh` script will tell you the currently bound IP before it reboots. After any reboot (and once a week via cron), the Raspberry Pi will check if the docker image has any updates. The check script is located in `/opt/bloonix-satellite-raspberrypi/renew-satellite-docker-container-cronjob.sh`. After the first reboot, this script will take a while to pull the docker image and start the container. To check if the script is still running, execute:
 ```
 root@as1234.dsl.satellite.example.com ~ $ ps aux | grep docker
 root       575  0.0  0.2   5004  2772 ?        S    14:59   0:00 /bin/bash /opt/bloonix-satellite-raspberrypi/renew-satellite-docker-container-cronjob.sh
@@ -131,10 +131,17 @@ root       668  0.1  0.7 841596  7876 ?        Ssl  14:59   0:00 docker-containe
 root       792  1.0  1.7 838932 17580 ?        Sl   15:00   0:00 docker pull satellitesharing/bloonix-satellite:arm
 ```
 
-To show the logfiles of current Bloonix Satellite container:
+To show all present containers:
+```bash
+docker ps -a
+```
+
+To show the logfiles of the current `BloonixSatellite` container:
 ```bash
 docker logs BloonixSatellite
 ```
+
+If anything looks odd, make sure `/opt/bloonix-satellite-raspberrypi/config.sh` is setup correctly and just re-run `/opt/bloonix-satellite-raspberrypi/renew-satellite-docker-container-cronjob.sh` from your terminal.
 
 ### 3) Configure your router for the Raspberry Pi
 
