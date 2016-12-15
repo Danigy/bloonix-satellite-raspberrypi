@@ -68,7 +68,7 @@ full_host_name="${ORIGIN,,}.${DOMAIN}"
 hostname $full_host_name
 sed '/127.0.1.1/d' /etc/hosts
 echo "127.0.0.1 localhost
-127.0.1.1 $full_host_name ${ORIGIN,,}" >> /etc/hosts
+127.0.1.1 $full_host_name ${ORIGIN,,}" > /etc/hosts
 echo $full_host_name > /etc/hostname
 
 # Setup a nice PS1 so the hostname is viewd
