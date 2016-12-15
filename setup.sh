@@ -12,6 +12,8 @@ source config.sh
 #set -x
 
 
+
+
 tput setf 2; echo -e '\n## Secure the root account - disable passwords for it'; tput sgr0
 
 passwd -l -d root
@@ -24,14 +26,16 @@ echo 'Etc/UTC' > /etc/timezone
 dpkg-reconfigure tzdata
 
 
-tput setf 2; echo -e '\n## Createing a 2 GB swapfile - this takes around three minutes using a Samsung EVO 32GB Class 10 SD card'; tput sgr0
+tput setf 2; echo -e '\n## Creating a 2 GB swapfile - this takes around three minutes using a Samsung EVO 32GB Class 10 SD card'; tput sgr0
 
-test -f /var/opt/swapfile.img || dd if=/dev/zero bs=1M count=2048 of=/var/opt/swapfile.img
-chmod -v 0600 /var/opt/swapfile.img
-sync
-mkswap /var/opt/swapfile.img
-grep swap /etc/fstab || echo '/var/opt/swapfile.img none swap sw 0 0' >> /etc/fstab
-swapon -a
+if ! swapon -s | grep 'swapfile.img' 2>&1 >/dev/null; then
+    test -f /var/opt/swapfile.img || dd if=/dev/zero bs=1M count=2048 of=/var/opt/swapfile.img
+    chmod -v 0600 /var/opt/swapfile.img
+    sync
+    mkswap /var/opt/swapfile.img
+    grep swap /etc/fstab || echo '/var/opt/swapfile.img none swap sw 0 0' >> /etc/fstab
+    swapon -a
+fi
 
 
 tput setf 2; echo -e '\n## Installing packages'; tput sgr0
@@ -39,43 +43,54 @@ tput setf 2; echo -e '\n## Installing packages'; tput sgr0
 # Enable required contrib sources for apt-transport-https
 echo -e 'deb http://mirrordirector.raspbian.org/raspbian jessie main firmware non-free\ndeb http://archive.raspberrypi.org/debian jessie main' > /etc/apt/sources.list
 # Get up to date
-apt-get update; apt-get -y upgrade; apt-get -y dist-upgrade
+#apt-get update; apt-get -y upgrade; apt-get -y dist-upgrade
 # Install required packages
-apt-get -y install unattended-upgrades whois wget openvpn curl apt-transport-https raspbian-archive-keyring haveged shorewall
+apt-get -y install unattended-upgrades whois wget openvpn curl apt-transport-https raspbian-archive-keyring haveged shorewall dnsutils ntpd
 # Enable unattended-upgrades
 echo -e 'APT::Periodic::Update-Package-Lists "1";\nAPT::Periodic::Unattended-Upgrade "1";' > /etc/apt/apt.conf.d/20auto-upgrades
 # Add docker repository, docker for ARM comes from http://blog.hypriot.com/downloads/
 # the following is extracted from: curl -s https://packagecloud.io/install/repositories/Hypriot/Schatzkiste/script.deb.sh | bash
 curl -L 'https://packagecloud.io/Hypriot/Schatzkiste/gpgkey' 2> /dev/null | apt-key add -
 echo 'deb https://packagecloud.io/Hypriot/Schatzkiste/raspbian/ jessie main' > /etc/apt/sources.list.d/Hypriot_Schatzkiste.list
-apt-get update; apt-get -y install docker-hypriot
+#apt-get update; apt-get -y install docker-hypriot
 # installation will fail, we have to reboot, then it works
 
 
-#tput setf 2; echo -e '\n## Set hostname (its not really required to set the hostname..)'; tput sgr0
+tput setf 2; echo -e '\n## Set hostname (its not really required to set the hostname..)'; tput sgr0
 
-#current_public_ip="$(wget http://ipinfo.io/ip -qO -)"
-#domain='example.sat.com'
-#full_host_name="${ORIGIN}.$domain"
-#hostname $full_host_name
-#sed '/127.0.0.1/d' /etc/hosts
-#echo "127.0.0.1 $full_host_name $ORIGIN" >> /etc/hosts
-#echo $full_host_name > /etc/hostname
+# The AS number for the DSL the raspi is connected to
+PUBLIC_IP="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+ORIGIN="$(whois $PUBLIC_IP | grep origin | awk '{print $2}')"
+full_host_name="${ORIGIN}.${DOMAIN}"
+hostname $full_host_name
+sed '/127.0.1.1/d' /etc/hosts
+echo "127.0.1.1 $full_host_name $ORIGIN" >> /etc/hosts
+echo $full_host_name > /etc/hostname
+
+# Setup a nice PS1 so the hostname is viewd
+if ! grep "^PS1" /root/.bashrc 2>&1 >/dev/null; then
+    cat <<EOF >> /root/.bashrc
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u\[\033[01;33m\]@\[\033[01;36m\]$(hostname -f) \[\033[01;33m\]\w \[\033[01;35m\]\$ \[\033[00m\]'
+EOF
+fi
 
 
 tput setf 2; echo -e '\n## Setting up a cronjob to renew the bloonix satellite docker image and container'; tput sgr0
 
-# Download the docker container and image renewal script
-wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/renew-satellite-docker-container-cronjob.sh -O /usr/local/sbin/renew-satellite-docker-container.sh
-sed -i "s/@@@SATELLITE_AUTH_KEY@@@/${SATELLITE_AUTHKEY}/g" /usr/local/sbin/renew-satellite-docker-container.sh
-chmod 700 /usr/local/sbin/renew-satellite-docker-container.sh
 # Run the cronjobs at 00:00 on sundays (try to avoid the time of the default force-reconnect on most routers)
 if ! grep bloonix /var/spool/cron/crontabs/root 2>/dev/null; then
     # Renew the renewal script weekly
-    crontab -l | { cat; echo "0 0 * * 0 wget -q https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/renew-satellite-docker-container-cronjob.sh -O /usr/local/sbin/renew-satellite-docker-container.sh"; } | crontab -
+    crontab -l | { cat; echo "0 0 * * 0 cd /opt/bloonix-satellite-raspberrypi/; git pull"; } | crontab -
     # Run the renewal script weekly
-    crontab -l | { cat; echo "5 0 * * 0 /usr/local/sbin/renew-satellite-docker-container.sh"; } | crontab -
+    crontab -l | { cat; echo "5 0 * * 0 /opt/bloonix-satellite-raspberrypi/renew-satellite-docker-container-cronjob.sh"; } | crontab -
 fi
+
+# Setup to run the renewal cronjob on every boot
+echo '#!/bin/sh -e
+/opt/bloonix-satellite-raspberrypi/renew-satellite-docker-container-cronjob.sh
+exit 0' > /etc/rc.local
+
+
 
 tput setf 2; echo -e '\n## Blacklisting the drivers for wlan and bluetooth'; tput sgr0
 
@@ -156,25 +171,15 @@ WantedBy=default.target' > /etc/systemd/system/docker-bloonix-satellite.service
 systemctl daemon-reload
 
 
-
 ### END ###
 
-# Save origin
-echo $origin > /root/origin-during-setup.txt
-chmod -v 600 /root/origin-during-setup.txt
-
 # Print completed message
+LOCAL_ETH_IP="$(/sbin/ifconfig eth0 | grep "inet addr" | awk '{ print $2 }' | awk -F: '{ print $2}')"
 tput setf 2
-echo -e "============================================================================================================="
-echo -e "INSTALLATION COMPLETED"
-echo -e "Origin: $origin"
-echo -e "\nThis machine will reboot in 60 seconds to complete the installation."
-echo -e "If this machine was set up the first time, after the reboot login and run this script:\n"
-echo -e "/usr/local/sbin/renew-satellite-docker-container.sh"
-echo -e "systemctl restart docker-bloonix-satellite.service"
-echo -e "systemctl status docker-bloonix-satellite.service"
-echo -e "docker logs BloonixSatellite"
-echo -e "\nPress CRTL+C to abort reboot countdown\n"
+echo -e "\n\n==INSTALLATION COMPLETED ================================================================================\n"
+echo -e "The hostname has changed, ssh to this machine using the new hostname or the IP bound on eth0:\n"
+echo -e "ssh root@$LOCAL_ETH_IP"
+echo -e "This machine will reboot in 60 seconds to complete the installation. Press CRTL+C to abort reboot countdown\n"
 echo -e "=============================================================================================================\n"
 tput sgr0
 
