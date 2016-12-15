@@ -10,8 +10,8 @@ SATELLITE_AUTHKEY='secret_longer_than_32_characters_bloonix_satellite_authkey'
 ROUTER_IP='192.168.88.1'
 
 # Your AS number, find out via:
-# whois $(dig +short myip.opendns.com @resolver1.opendns.com) | grep origin
-AS_ID='AS1234'
+# whois $(dig +short myip.opendns.com @resolver1.opendns.com) | grep origin | awk '{print $2}'
+ORIGIN='AS1234'
 
 # Setup data about the VPN server that is used to forward requests to this Raspberry Pi
 VPN_SERVER_IP='123.123.123.123'
@@ -24,3 +24,13 @@ VPN_CLIENT_INTERFACE='tun0'
 SSH_PUBLIC_KEYS=()
 SSH_PUBLIC_KEYS+=('ssh-rsa .... foo@example.com')
 SSH_PUBLIC_KEYS+=('ssh-rsa .... bar@example.com')
+
+
+
+
+# No need to modify these variables
+REGISTRY="satellitesharing"
+BASE_IMAGE="bloonix-satellite:arm"
+IMAGE="$REGISTRY/$BASE_IMAGE"
+CONTAINER_NAME="BloonixSatellite"
+
