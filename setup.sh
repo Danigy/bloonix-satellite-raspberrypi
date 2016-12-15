@@ -6,6 +6,7 @@
 # Source the config file
 if ! source config.sh; then
   echo 'Unable to source config.sh, aborting!'
+  exit 1
 fi
 
 
