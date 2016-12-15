@@ -1,6 +1,6 @@
 # Config file for setup.sh
 #
-# Please edit all the variables
+# Please copy this file to "config.sh" and edit the required variables
 
 
 # Enter the satellite authkey
