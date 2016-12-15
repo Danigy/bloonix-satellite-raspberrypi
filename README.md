@@ -80,7 +80,7 @@ The filesystem on /dev/mmcblk0p2 is now 7799536 blocks long.
 Mount the resized root partition and `git clone` the required installer files to the SD card:
 ```
 sudo mount /dev/mmcblk0p2 /mnt
-sudo git clone https://github.com/satellitesharing/bloonix-satellite-raspberrypi.git /mnt/root/bloonix-satellite-raspberrypi
+sudo git clone https://github.com/satellitesharing/bloonix-satellite-raspberrypi.git /mnt/opt/bloonix-satellite-raspberrypi
 ```
 
 You may want to copy OpenVPN Client configuration files as well. To set up your ssh public key so you can directly login as root via `root@minibian` - depending on your routers local DNS setup:
@@ -112,13 +112,13 @@ ssh root@minibian
 **Edit the setup script variables**  
 Now login to the Raspberry Pi. Some variables have to be set for the `setup.sh` installation script to work properly.
 ```bash
-vi /root/bloonix-satellite-raspberrypi/config.sh
+vi /opt/bloonix-satellite-raspberrypi/config.sh
 ```
 
 **Start the setup**  
 When the variables are set, start the installation. This might take around ten minutes, depending on your internet speed and class of SD card.
 ```bash
-/root/bloonix-satellite-raspberrypi/setup.sh
+/opt/bloonix-satellite-raspberrypi/setup.sh
 ```
 
 When the script is finished, it will tell so and automatically reboot 60 seconds later.  
