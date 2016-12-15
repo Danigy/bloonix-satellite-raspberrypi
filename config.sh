@@ -9,10 +9,6 @@ SATELLITE_AUTHKEY='secret_longer_than_32_characters_bloonix_satellite_authkey'
 # State the IP of the router
 ROUTER_IP='192.168.88.1'
 
-# Your AS number, find out via:
-# whois $(dig +short myip.opendns.com @resolver1.opendns.com) | grep origin | awk '{print $2}'
-ORIGIN='AS1234'
-
 # Setup data about the VPN server that is used to forward requests to this Raspberry Pi
 VPN_SERVER_IP='123.123.123.123'
 VPN_SERVER_PORT='1194'
