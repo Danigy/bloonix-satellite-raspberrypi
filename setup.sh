@@ -17,10 +17,10 @@ tput setf 2; echo -e '\n## Secure the root account - disable passwords for it'; 
 passwd -l -d root
 
 
-tput setf 2; echo -e '\n## Set timezone'; tput sgr0
+tput setf 2; echo -e '\n## Setting timezone to UTC'; tput sgr0
 
 export DEBCONF_NONINTERACTIVE_SEEN=true DEBIAN_FRONTEND=noninteractive
-echo $TIME_ZONE > /etc/timezone
+echo 'Etc/UTC' > /etc/timezone
 dpkg-reconfigure tzdata
 
 
@@ -54,14 +54,12 @@ apt-get update; apt-get -y install docker-hypriot
 
 #tput setf 2; echo -e '\n## Set hostname (its not really required to set the hostname..)'; tput sgr0
 
-current_public_ip="$(wget http://ipinfo.io/ip -qO -)"
+#current_public_ip="$(wget http://ipinfo.io/ip -qO -)"
 #domain='example.sat.com'
-origin="$(whois ${current_public_ip} | grep origin | awk '{print $2}')"
-host_part=$origin
-#full_host_name="${host_part}.$domain"
+#full_host_name="${ORIGIN}.$domain"
 #hostname $full_host_name
 #sed '/127.0.0.1/d' /etc/hosts
-#echo "127.0.0.1 $full_host_name $host_part" >> /etc/hosts
+#echo "127.0.0.1 $full_host_name $ORIGIN" >> /etc/hosts
 #echo $full_host_name > /etc/hostname
 
 
@@ -72,7 +70,7 @@ wget https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-cl
 sed -i "s/@@@SATELLITE_AUTH_KEY@@@/${SATELLITE_AUTHKEY}/g" /usr/local/sbin/renew-satellite-docker-container.sh
 chmod 700 /usr/local/sbin/renew-satellite-docker-container.sh
 # Run the cronjobs at 00:00 on sundays (try to avoid the time of the default force-reconnect on most routers)
-if ! grep bloonix /var/spool/cron/crontabs/root; then
+if ! grep bloonix /var/spool/cron/crontabs/root 2>/dev/null; then
     # Renew the renewal script weekly
     crontab -l | { cat; echo "0 0 * * 0 wget -q https://raw.githubusercontent.com/satellitesharing/bloonix-satellite-dsl-client/master/renew-satellite-docker-container-cronjob.sh -O /usr/local/sbin/renew-satellite-docker-container.sh"; } | crontab -
     # Run the renewal script weekly
@@ -130,7 +128,8 @@ startup=1' > /etc/default/shorewall
 
 
 tput setf 2; echo -e '\n## Enabling openvpn'; tput sgr0
-if ifconfig | grep tun; then
+
+if ! ifconfig | grep $VPN_CLIENT_INTERFACE; then
     mv -v /root/*tar.gz /etc/openvpn/
     cd /etc/openvpn/
     tar xvzf *tar.gz
