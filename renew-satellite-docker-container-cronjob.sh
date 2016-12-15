@@ -120,16 +120,9 @@ else
 fi
 
 
-echo "INFO:  Managing systemd service"
-# Enable systemd service that the setup.sh script created at boot
-systemctl enable docker-bloonix-satellite.service
-# Start service
-systemctl start docker-bloonix-satellite.service
-
 # Show status
-echo "INFO:  Showing systemd status"
-systemctl status docker-bloonix-satellite.service
-echo -e "\nINFO:  Showing docker container logs"
+echo -e "\nINFO:  Showing docker container processes and logs"
+docker ps -a
 docker logs --tail 10 ${CONTAINER_NAME}
 
 

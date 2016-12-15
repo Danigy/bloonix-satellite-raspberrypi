@@ -122,12 +122,13 @@ When the variables are set, start the installation. This might take around ten m
 /opt/bloonix-satellite-raspberrypi/setup.sh
 ```
 
-When the script is finished, it will tell so and automatically reboot 60 seconds later. After any reboot (and once a week via cron),
-the Raspberry Pi will check if the docker image has any updates. The check script is located in `/opt/bloonix-satellite-raspberrypi/renew-satellite-docker-container-cronjob.sh`.
-
-You should be able to login via ssh now. The hostname of the Raspberry Pi was changed, but the `setup.sh` script will tell you the currently bound IP so you can use that for ssh. To check the status of the services:
-```bash
-systemctl status docker-bloonix-satellite.service
+When the script is finished, it will tell so and automatically reboot 60 seconds later and you should be able to login via SSH. The hostname of the Raspberry Pi was changed, but the `setup.sh` script will tell you the currently bound IP before it reboots. After any reboot (and once a week via cron), the Raspberry Pi will check if the docker image has any updates. The check script is located in `/opt/bloonix-satellite-raspberrypi/renew-satellite-docker-container-cronjob.sh`. After the first reboot, this script will take a while to pull the docker image and start the container. To check if the script is still running, execute:
+```
+root@as1234.dsl.satellite.example.com ~ $ ps aux | grep docker
+root       575  0.0  0.2   5004  2772 ?        S    14:59   0:00 /bin/bash /opt/bloonix-satellite-raspberrypi/renew-satellite-docker-container-cronjob.sh
+root       630 29.0  3.1 878820 31636 ?        Ssl  14:59   0:26 /usr/bin/docker daemon -H fd://
+root       668  0.1  0.7 841596  7876 ?        Ssl  14:59   0:00 docker-containerd -l /var/run/docker/libcontainerd/docker-containerd.sock --runtime docker-runc
+root       792  1.0  1.7 838932 17580 ?        Sl   15:00   0:00 docker pull satellitesharing/bloonix-satellite:arm
 ```
 
 To show the logfiles of current Bloonix Satellite container:

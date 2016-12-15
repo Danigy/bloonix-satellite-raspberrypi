@@ -167,21 +167,22 @@ fi
 tput setf 2; echo -e '\n## Setting up systemd to always spawn our Container on startup'; tput sgr0
 
 # Create a systemd config file
-echo '[Unit]
-Description=Bloonix Satellite Docker Container
-Requires=docker.service openvpn.service
-After=docker.service openvpn.service
+# Use /etc/rc.local as update and run manager for the docker container
+#echo '[Unit]
+#Description=Bloonix Satellite Docker Container
+#Requires=docker.service openvpn.service
+#After=docker.service openvpn.service
 
-[Service]
-Restart=always
-ExecStart=/usr/bin/docker start -a BloonixSatellite
-ExecStop=/usr/bin/docker stop -t 2 BloonixSatellite
+#[Service]
+#Restart=always
+#ExecStart=/usr/bin/docker start -a BloonixSatellite
+#ExecStop=/usr/bin/docker stop -t 2 BloonixSatellite
 
-[Install]
-WantedBy=default.target' > /etc/systemd/system/docker-bloonix-satellite.service
+#[Install]
+#WantedBy=default.target' > /etc/systemd/system/docker-bloonix-satellite.service
 
 # Reload systemd
-systemctl daemon-reload
+#systemctl daemon-reload
 
 
 ### END ###
