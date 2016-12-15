@@ -4,7 +4,9 @@
 
 
 # Source the config file
-source config.sh
+if ! source config.sh; then
+  echo 'Unable to source config.sh, aborting!'
+fi
 
 
 ### MAIN ###
