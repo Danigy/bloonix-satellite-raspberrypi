@@ -25,6 +25,9 @@ SSH_PUBLIC_KEYS=()
 SSH_PUBLIC_KEYS+=('ssh-rsa .... foo@example.com')
 SSH_PUBLIC_KEYS+=('ssh-rsa .... bar@example.com')
 
+# Domain name for this Raspberry Pi machine
+# Note that the AS origin number will be prepended for the fqdn!
+DOMAIN='dsl.satellite.example.com'
 
 
 
@@ -32,5 +35,5 @@ SSH_PUBLIC_KEYS+=('ssh-rsa .... bar@example.com')
 REGISTRY="satellitesharing"
 BASE_IMAGE="bloonix-satellite:arm"
 IMAGE="$REGISTRY/$BASE_IMAGE"
+# Name for the container for the Bloonix Satellite
 CONTAINER_NAME="BloonixSatellite"
-
