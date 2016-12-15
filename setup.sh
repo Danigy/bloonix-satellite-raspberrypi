@@ -4,7 +4,7 @@
 
 
 # Source the config file
-if ! /opt/bloonix-satellite-raspberrypi/source config.sh; then
+if ! source /opt/bloonix-satellite-raspberrypi/config.sh; then
   echo 'Unable to source /opt/bloonix-satellite-raspberrypi/config.sh, aborting!'
   exit 1
 fi
