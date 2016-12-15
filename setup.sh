@@ -48,7 +48,7 @@ echo -e 'deb http://mirrordirector.raspbian.org/raspbian jessie main firmware no
 # Get up to date
 apt-get update; apt-get -y upgrade; apt-get -y dist-upgrade
 # Install required packages
-apt-get -y install unattended-upgrades whois wget openvpn curl apt-transport-https raspbian-archive-keyring haveged shorewall dnsutils ntpd
+apt-get -y install unattended-upgrades whois wget openvpn curl apt-transport-https raspbian-archive-keyring haveged shorewall dnsutils ntp
 # Enable unattended-upgrades
 echo -e 'APT::Periodic::Update-Package-Lists "1";\nAPT::Periodic::Unattended-Upgrade "1";' > /etc/apt/apt.conf.d/20auto-upgrades
 # Add docker repository, docker for ARM comes from http://blog.hypriot.com/downloads/

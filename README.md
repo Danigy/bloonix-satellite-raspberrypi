@@ -112,6 +112,7 @@ ssh root@minibian
 **Edit the setup script variables**  
 Now login to the Raspberry Pi. Some variables have to be set for the `setup.sh` installation script to work properly.
 ```bash
+cp /opt/bloonix-satellite-raspberrypi/config.sh.example /opt/bloonix-satellite-raspberrypi/config.sh
 vi /opt/bloonix-satellite-raspberrypi/config.sh
 ```
 
